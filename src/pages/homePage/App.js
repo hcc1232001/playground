@@ -8,7 +8,7 @@ const App = (props) => {
   useEffect(() => {
     // const serverPort = 8688;
     // const serverPath = 'http://localhost';
-    const serverPath = 'ws://socketio-testing.herokuapp.com';
+    const serverPath = 'https://socketio-testing.herokuapp.com';
     // get the ip and port from ipc
     // const socket = io(window.location.origin);
     const serverUrl = `${serverPath}`;//`:${serverPort}`;
