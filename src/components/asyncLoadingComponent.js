@@ -19,5 +19,5 @@ function asyncLoadingFunction(funcToImportPage) {
 }
 
 export default function asyncLoadingPage(pageId) {
-  return asyncLoadingFunction(()=> import('pages/' + pageId + '/App'));
+  return asyncLoadingFunction(()=> import('pages/' + pageId));
 }

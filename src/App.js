@@ -14,6 +14,7 @@ const App = () => {
   return (
     <HashRouter>
       <Switch>
+        <Route path={routes.joinGame} render={getRenderPropForRoute('joinGame')} />
         <Route path={routes.homePage} render={getRenderPropForRoute('homePage')} />
         <Redirect to={routes.homePage} />
       </Switch>
