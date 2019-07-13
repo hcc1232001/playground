@@ -10,6 +10,7 @@ const serverPort = 443;
 const App = (props) => {
   const [socket, setSocket] = useState(null);
   const [playersInfo, setPlayersInfo] = useState([]);
+  // const [shakeCount, setShakeCount] = useState(0);
 
   useEffect(() => {
     // const serverPath = 'http://localhost';
@@ -36,12 +37,14 @@ const App = (props) => {
   }, [socket]);
   const onShake = () => {
     /* send signal to server */
+    socket.emit('shake');
   }
   return <div>
     <UseDeviceMotion onShake={onShake} />
     Join Game!
     {/* JSON.stringify(props) */}
-    {props.match.match.params.userId}
+    <br />
+    Shake it!
   </div>;
 }
 

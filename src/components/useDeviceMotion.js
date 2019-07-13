@@ -3,10 +3,11 @@ import {useState, useEffect} from 'react';
 
 
 // https://www.raymondcamden.com/2017/04/25/using-device-motion-on-the-web
-const useDeviceMotion = (props) => {
+const UseDeviceMotion = (props) => {
   const [threshold, setThreshold] = useState(45);
   const [lastAccVec3, setLastAccVec3] = useState([null, null, null]);
   const [moveCounter, setMoveCounter] = useState(0);
+  const [shakeCounter, setShakeCounter] = useState(0);
   useEffect(() => {
     if (props.threshold) {
       setThreshold(props.threshold);
@@ -28,6 +29,9 @@ const useDeviceMotion = (props) => {
   useEffect(() => {
     if(moveCounter > 2) {
       console.log('SHAKE!!!');
+      // setShakeCounter((prevShakeCounter => {
+      //   return prevShakeCounter + 1;
+      // }));
       if (props.onShake && typeof(props.onShake) === 'function') {
         props.onShake();
       }
@@ -64,9 +68,12 @@ const useDeviceMotion = (props) => {
     setLastAccVec3([alpha, beta, gamma]);
   }
 
-  return <div>
-    {lastAccVec3.map(v => v + ', ')}
-  </div>;
+  // return <div>
+  //   {lastAccVec3.map(v => v + ', ')}
+  // </div>;
+
+  // return shakeCounter;
+  return <div />;
 }
 
-export default useDeviceMotion;
+export default UseDeviceMotion;

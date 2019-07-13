@@ -2,9 +2,9 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import io from 'socket.io-client';
-// import UseDeviceMotion from 'components/useDeviceMotion';
 import QRCode from 'qrcode';
 
+import ShakeGame from 'containers/shakeGame';
 import './homePage.css';
 
 const serverPath = 'https://socketio-testing.herokuapp.com';
@@ -31,15 +31,12 @@ const App = (props) => {
         socket.emit('createRoom');
       });
       socket.on('playersInfo', (playersInfo) => {
-        // setPlayerCount(count);
-        console.log(playersInfo);
-        // const playersInfo = [];
         for (let i = 0; i < playersInfo.length; i++) {
           const playerIdx = i;
           const playerInfo = playersInfo[playerIdx];
           QRCode.toDataURL(
             // 'https://hcc1232001.github.io/playground/#/' + playerInfo['playerId'],
-            'http://10.0.1.111:3001/#/' + playerInfo['playerId'],
+            window.location.href + playerInfo['playerId'],
             {
               width: 300,
               color: {
@@ -52,7 +49,8 @@ const App = (props) => {
             setPlayersInfo((prevPlayersInfo) => {
               const newPlayerInfo = [...prevPlayersInfo];
               newPlayerInfo[playerIdx] = {
-                url: 'http://10.0.1.111:3001/#/' + playerInfo['playerId'],
+                ...playerInfo,
+                url: window.location.href + playerInfo['playerId'],
                 img: url
               };
               return newPlayerInfo;
@@ -75,7 +73,12 @@ const App = (props) => {
           <a href={playerInfo['url']} target="_blank">
             <img src={playerInfo['img']} />
           </a>
-        </div>
+        </div>;
+      } else {
+        return <div key={playerInfo['url']} className="player-block">
+          Player joined!
+          <ShakeGame playerInfo={playerInfo} />
+        </div>;
       }
     })}
   </div>;
