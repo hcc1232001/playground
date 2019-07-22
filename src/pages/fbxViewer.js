@@ -4,10 +4,10 @@ import * as THREE from 'three';
 import OrbitControls from 'utils/vendor/orbitControls';
 // import {FBXLoader} from 'utils/vendor/FBXLoader';
 
-// import panAUrl from 'media/models/Windows for Building department breaking.fbx';
-import panAUrl from 'media/models/190717_frying pan animationA(2).fbx';
+import fbxUrl from 'media/models/Windows for Building department breaking.fbx';
+// import fbxUrl from 'media/models/190717_frying pan animationA(2).fbx';
 
-// import panFullSet from 'media/models/190715_CLP_game(7).fbx';
+// import fbxUrl from 'media/models/190715_CLP_game(7).fbx';
 
 const FBXLoader = require('three-fbxloader-offical');
 
@@ -83,7 +83,7 @@ const App = (props) => {
 
     const loader = new FBXLoader();
     let mixer = null;
-    loader.load(panAUrl, (object) => {
+    loader.load(fbxUrl, (object) => {
       mixer = new THREE.AnimationMixer( object );
       const action = mixer.clipAction( object.animations[ 0 ] );
       // action.loop = THREE.LoopOnce;
@@ -123,21 +123,19 @@ const App = (props) => {
   }
   const update = () => {
     animationFrame = setTimeout(() => update(), 1000 / 30);
-    const delta = 1 / 30;//threeObjects.clock.getDelta();
-    if (threeObjects.mixer && animatePan > 0) {
-      setAnimatePan((prevAnimatePan) => {
-        return prevAnimatePan - 1;
-      });
+    // fix the animation step to 30fps
+    const delta = 1 / 30; //threeObjects.clock.getDelta();
+    if (threeObjects.mixer) {
       threeObjects.mixer.update(delta);
     }
     threeObjects.orbitControl.update();
     threeObjects.renderer.render( threeObjects.scene, threeObjects.camera );
   };
-  const doPanAnimation = () => {
-    setAnimatePan((prevAnimatePan) => {
-      return prevAnimatePan + 18;
-    });
-  };
+  // const doPanAnimation = () => {
+  //   setAnimatePan((prevAnimatePan) => {
+  //     return prevAnimatePan + 18;
+  //   });
+  // };
   useEffect(() => {
     initScene();
   }, []);
@@ -156,7 +154,7 @@ const App = (props) => {
     }
   }, [threeObjects, animatePan]);
   return <div ref={setContainerEl}
-    onClick={doPanAnimation}
+    // onClick={doPanAnimation}
     className="threeCanvas"
     style={{
       height: '100vh',
