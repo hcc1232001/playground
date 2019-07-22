@@ -1,6 +1,7 @@
 const routes = {
-  homePage: '/',
-  joinGame: '/:userId',
+  homePage: '/game',
+  joinGame: '/game/:userId',
+  fbxViewer: '/fbxViewer'
 };
 
 export default routes;

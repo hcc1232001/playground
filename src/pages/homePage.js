@@ -1,18 +1,29 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+// import {Link} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import io from 'socket.io-client';
 import QRCode from 'qrcode';
 
+import routes from 'globals/routes';
+
+import {serverPath, serverPort} from 'globals/config';
+
 import ShakeGame from 'containers/shakeGame';
+
 import './homePage.css';
 
-const serverPath = 'https://socketio-testing.herokuapp.com';
-const serverPort = 443;
+// const serverPath = 'https://socketio-testing.herokuapp.com';
+// const serverPort = 443;
 
 const App = (props) => {
   const [socket, setSocket] = useState(null);
   const [playersInfo, setPlayersInfo] = useState([]);
+
+  const panFbxPath = [
+    'media/models/190717_frying pan animationA(2).fbx',
+    'media/models/190717_frying pan animationA(2).fbx',
+    'media/models/190717_frying pan animationA(2).fbx',
+  ]
   useEffect(() => {
     // const serverPath = 'http://localhost';
     // get the ip and port from ipc
@@ -34,15 +45,16 @@ const App = (props) => {
         for (let i = 0; i < playersInfo.length; i++) {
           const playerIdx = i;
           const playerInfo = playersInfo[playerIdx];
+          const joinGamePath = window.location.origin + '/#' + routes.joinGame.replace(':userId', playerInfo['playerId']);
           QRCode.toDataURL(
-            // 'https://hcc1232001.github.io/playground/#/' + playerInfo['playerId'],
-            window.location.href + playerInfo['playerId'],
+            joinGamePath,
             {
               width: 300,
               color: {
                 dark: '#000000FF',
                 light: '#FFFFFFFF'
-              }
+              },
+              margin: 0,
             }
           )
           .then(url => {
@@ -50,7 +62,7 @@ const App = (props) => {
               const newPlayerInfo = [...prevPlayersInfo];
               newPlayerInfo[playerIdx] = {
                 ...playerInfo,
-                url: window.location.href + playerInfo['playerId'],
+                url: joinGamePath,
                 img: url
               };
               return newPlayerInfo;
@@ -70,8 +82,9 @@ const App = (props) => {
     {playersInfo.map(playerInfo => {
       if (!playerInfo.joined) {
         return <div key={playerInfo['url']} className="player-block">
-          <a href={playerInfo['url']} target="_blank">
-            <img src={playerInfo['img']} />
+          {/* https://mathiasbynens.github.io/rel-noopener/ */}
+          <a href={playerInfo['url']} target="_blank" rel="noopener noreferrer">
+            <img src={playerInfo['img']} alt={`player QRcode`}/>
           </a>
         </div>;
       } else {

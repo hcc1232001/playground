@@ -2,7 +2,7 @@ import React from 'react';
 import {HashRouter, Switch, Route, Redirect} from 'react-router-dom';
 import asyncLoadingPage from 'components/asyncLoadingComponent.js';
 import routes from 'globals/routes';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 
 const getRenderPropForRoute = (pageId) => {
@@ -16,7 +16,8 @@ const App = () => {
       <Switch>
         <Route path={routes.joinGame} render={getRenderPropForRoute('joinGame')} />
         <Route path={routes.homePage} render={getRenderPropForRoute('homePage')} />
-        <Redirect to={routes.homePage} />
+        <Route path={routes.fbxViewer} render={getRenderPropForRoute('fbxViewer')} />
+        <Redirect to={routes.fbxViewer} />
       </Switch>
     </HashRouter>
   );

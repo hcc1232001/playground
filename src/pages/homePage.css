@@ -1,3 +1,20 @@
+.page.homePage {
+  display: flex;
+  height: 100%;
+}
 .player-block {
+  /* display: inline-block; */
+  flex: 0 0 33.33333333%;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.player-block a {
+  margin: 15px;
   display: inline-block;
+  vertical-align: top;
+}
+.player-block a img {
+  vertical-align: top;
 }
