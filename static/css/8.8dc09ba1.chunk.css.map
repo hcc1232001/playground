@@ -1,1 +1,0 @@
-{"version":3,"sources":["homePage.css"],"names":[],"mappings":"AAGA,8BAFE,oBAMF,CAJA,gBACE,WAGF,CACA,oCAFE,kBAIF","file":"8.8dc09ba1.chunk.css","sourcesContent":[".player-block {\r\n  display: inline-block;\r\n}\r\n.player-block a {\r\n  margin: 15px;\r\n  display: inline-block;\r\n  vertical-align: top;\r\n}\r\n.player-block a img {\r\n  vertical-align: top;\r\n}"]}
