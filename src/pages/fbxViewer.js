@@ -37,10 +37,15 @@ const App = (props) => {
     clock: null,
     mixer: null,
   });
-  const [animatePan, setAnimatePan] = useState(0);
+  const [cameraPosition, setCameraPosition] = useState(0);
   let containerEl = null;
   let animationFrame = null;
-
+  const cameraDefaultPosition = [
+    [500, 500, 250],
+    [500, 500, -250],
+    [500, -500, -250],
+    [500, -500, 250],
+  ]
   const setContainerEl = (ref) => containerEl = ref;
   const initScene = () => {
     const scene = new THREE.Scene();
@@ -145,14 +150,24 @@ const App = (props) => {
     if (threeObjects.mixer) {
       threeObjects.mixer.update(delta);
     }
+    // try move camera to new position
+    const newCamPos = cameraDefaultPosition[cameraPosition];
+    const oldCamPos = threeObjects.camera.position;
+    if (newCamPos[0] !== oldCamPos.x ||
+      newCamPos[1] !== oldCamPos.y||
+      newCamPos[2] !== oldCamPos.z) {
+      oldCamPos.x = (newCamPos[0] - oldCamPos.x) * 0.1 + oldCamPos.x;
+      oldCamPos.y = (newCamPos[1] - oldCamPos.y) * 0.1 + oldCamPos.y;
+      oldCamPos.z = (newCamPos[2] - oldCamPos.z) * 0.1 + oldCamPos.z;
+    }
     threeObjects.orbitControl.update();
     threeObjects.renderer.render( threeObjects.scene, threeObjects.camera );
   };
-  // const doPanAnimation = () => {
-  //   setAnimatePan((prevAnimatePan) => {
-  //     return prevAnimatePan + 18;
-  //   });
-  // };
+  const doCameraAnimation = () => {
+    setCameraPosition((prevCameraPosition) => {
+      return (prevCameraPosition + 1) % cameraDefaultPosition.length;
+    });
+  };
   useEffect(() => {
     initScene();
   }, []);
@@ -169,9 +184,9 @@ const App = (props) => {
         // cancelAnimationFrame(animationFrame);
         clearTimeout(animationFrame);
     }
-  }, [threeObjects, animatePan]);
+  }, [threeObjects, cameraPosition]);
   return <div ref={setContainerEl}
-    // onClick={doPanAnimation}
+    onClick={doCameraAnimation}
     className="threeCanvas"
     style={{
       height: '100vh',
