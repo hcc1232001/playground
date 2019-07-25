@@ -15,9 +15,12 @@ const App = () => {
     <HashRouter>
       <Switch>
         <Route path={routes.joinGame} render={getRenderPropForRoute('joinGame')} />
+        {/* <Route path={routes.createGame} render={getRenderPropForRoute('createGame')} />*/}
         <Route path={routes.homePage} render={getRenderPropForRoute('homePage')} />
         <Route path={routes.fbxViewer} render={getRenderPropForRoute('fbxViewer')} />
-        <Redirect to={routes.fbxViewer} />
+        <Route path={routes.kitchenViewer} render={getRenderPropForRoute('kitchenViewer')} />
+        <Route path={routes.indexPage} render={getRenderPropForRoute('indexPage')} />
+        <Redirect to={routes.indexPage} />
       </Switch>
     </HashRouter>
   );

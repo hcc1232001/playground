@@ -76,7 +76,7 @@ const UseDeviceMotion = (props) => {
   // </div>;
 
   // return shakeCounter;
-  return <div>{moveCounter}</div>;
+  return <div></div>;
 }
 
 export default UseDeviceMotion;

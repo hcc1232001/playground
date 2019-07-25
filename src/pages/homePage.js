@@ -1,5 +1,5 @@
 import React from 'react';
-// import {Link} from 'react-router-dom';
+import {generatePath} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import io from 'socket.io-client';
 import QRCode from 'qrcode';
@@ -9,6 +9,7 @@ import routes from 'globals/routes';
 import {serverPath, serverPort} from 'globals/config';
 
 import ShakeGame from 'containers/shakeGame';
+import CreateGame from 'pages/createGame';
 
 import './homePage.css';
 
@@ -45,7 +46,8 @@ const App = (props) => {
         for (let i = 0; i < playersInfo.length; i++) {
           const playerIdx = i;
           const playerInfo = playersInfo[playerIdx];
-          const joinGamePath = window.location.origin + '/#' + routes.joinGame.replace(':userId', playerInfo['playerId']);
+          // const joinGamePath = window.location.origin + '/#' + routes.joinGame.replace(':userId', playerInfo['playerId']);
+          const joinGamePath = window.location.origin + '/#' + generatePath(routes.joinGame, {userId: playerInfo['playerId']});
           QRCode.toDataURL(
             joinGamePath,
             {
@@ -80,7 +82,7 @@ const App = (props) => {
   return <div className="page homePage">
     {/* display the box of the player recieved from server */}
     {playersInfo.map(playerInfo => {
-      if (!playerInfo.joined) {
+      if (playerInfo.joined) {
         return <div key={playerInfo['url']} className="player-block">
           {/* https://mathiasbynens.github.io/rel-noopener/ */}
           <a href={playerInfo['url']} target="_blank" rel="noopener noreferrer">
@@ -94,6 +96,7 @@ const App = (props) => {
         </div>;
       }
     })}
+    {/* <CreateGame models={panFbxPath} /> */}
   </div>;
 }
 
