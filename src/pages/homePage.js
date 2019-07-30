@@ -21,9 +21,9 @@ const App = (props) => {
   const [playersInfo, setPlayersInfo] = useState([]);
 
   const panFbxPath = [
-    'media/models/190717_frying pan animationA(2).fbx',
-    'media/models/190717_frying pan animationA(2).fbx',
-    'media/models/190717_frying pan animationA(2).fbx',
+    'media/models/190717_frying pan animationA_shake.fbx',
+    'media/models/190717_frying pan animationA_shake.fbx',
+    'media/models/190717_frying pan animationA_shake.fbx',
   ]
   useEffect(() => {
     // const serverPath = 'http://localhost';

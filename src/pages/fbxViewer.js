@@ -12,6 +12,7 @@ import fbxUrl from 'media/models/Windows for Building department breaking.fbx';
 const FBXLoader = require('three-fbxloader-offical');
 
 const addShadowToChild = (object, scene) => {
+  let camera = null;
   object.traverse( function ( child ) {
     if (object !== child) {
       addShadowToChild(child, scene);
@@ -20,11 +21,11 @@ const addShadowToChild = (object, scene) => {
       child.scale.x = 0.001;
       child.scale.y = 0.001;
       child.scale.z = 0.001;
-      console.log(child.name);
     }
     child.castShadow = true;
     child.receiveShadow = true;
   });
+  return camera;
 }
 const App = (props) => {
   const [threeObjects, setThreeObjects] = useState({
@@ -156,9 +157,9 @@ const App = (props) => {
     if (newCamPos[0] !== oldCamPos.x ||
       newCamPos[1] !== oldCamPos.y||
       newCamPos[2] !== oldCamPos.z) {
-      oldCamPos.x = (newCamPos[0] - oldCamPos.x) * 0.1 + oldCamPos.x;
-      oldCamPos.y = (newCamPos[1] - oldCamPos.y) * 0.1 + oldCamPos.y;
-      oldCamPos.z = (newCamPos[2] - oldCamPos.z) * 0.1 + oldCamPos.z;
+      oldCamPos.x = (newCamPos[0] - oldCamPos.x) * 0.15 + oldCamPos.x;
+      oldCamPos.y = (newCamPos[1] - oldCamPos.y) * 0.15 + oldCamPos.y;
+      oldCamPos.z = (newCamPos[2] - oldCamPos.z) * 0.15 + oldCamPos.z;
     }
     threeObjects.orbitControl.update();
     threeObjects.renderer.render( threeObjects.scene, threeObjects.camera );
