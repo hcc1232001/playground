@@ -13,6 +13,8 @@ import meatUrl from 'media/textures/meat.png';
 import mildMeatUrl from 'media/textures/mid_meat.png';
 import welldoneMeatUrl from 'media/textures/welldone_meat.png';
 
+import fpsRenderer from 'components/fpsRenderer';
+
 import './kitchenViewer.css';
 
 const FBXLoader = require('three-fbxloader-offical');
@@ -184,10 +186,7 @@ const pansLoader = (roomLoaded) => {
 }
 
 
-const KitchenViewer = ({
-  desireFPS = 60,
-  useSAOPass = false
-}) => {
+const KitchenViewer = () => {
   const [threeObjects, setThreeObjects] = useState({
     scene: null,
     camera: null,
@@ -206,19 +205,19 @@ const KitchenViewer = ({
   const [textureLoaded, setTextureLoaded] = useState([]);
   const [windowSize, setWindowSize] = useState([window.innerWidth, window.innerHeight]);
   const [fpsTimer, setFpsTimer] = useState(Date.now());
-  const [test1, test2] = pansLoader(object);
-
+  // const [test1, test2] = pansLoader(object);
+  const enableSAOPass = false;
   let containerEl = null;
   let animationFrame = null;
   const setContainerEl = (ref) => containerEl = ref;
   const initScene = () => {
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera( 50, containerEl.offsetWidth / containerEl.offsetHeight, 1, 1000 );
+    const camera = new THREE.PerspectiveCamera( 36, containerEl.offsetWidth / containerEl.offsetHeight, 1, 1000 );
     // camera.position.set(49, 274, -214);
     // maybe use an animation clip to control the camera later
-    camera.position.set(0, 220, -90);
-    // camera.rotation.set(-2.4434609527920594, 0.01, -3.1415926535897927);
-    // camera.lookAt(0, 0, 0);
+    camera.position.set(0, 240, -150);
+    // camera.rotation.set(90, 0, 0);
+    camera.lookAt(0, 0, 120);
     camera.updateProjectionMatrix();
     
     // const light = new THREE.DirectionalLight(0xFFFFFF, 1);
@@ -270,7 +269,7 @@ const KitchenViewer = ({
     // orbitControl.enablePan = false;
     // orbitControl.panSpeed = 0.05;
     // raycaster
-    const raycaster = new THREE.Raycaster(camera.position, new THREE.Vector3(0, 0, 0), 0, orbitControl.maxDistance * 2);
+    // const raycaster = new THREE.Raycaster(camera.position, new THREE.Vector3(0, 0, 0), 0, orbitControl.maxDistance * 2);
 
     const clock = new THREE.Clock();
     
@@ -281,7 +280,12 @@ const KitchenViewer = ({
       addShadowToChild(object, scene);
       scene.add(object);
       setRoomLoaded(object);
-
+      // turn the cooker face material to white
+      const pansArray = object.children.filter((obj) => obj.name.startsWith("frying_pan_"));
+      pansArray.forEach(panObj => {
+        const cookerFace = panObj.children.find((panMesh) => panMesh.name.startsWith('induction_cooker_') && panMesh.name.endsWith('2'));
+        cookerFace.material.color = new THREE.Color(0xffffff);
+      })
     }, (item) => {
       // console.log( item, loaded, total );
       console.log(item.loaded / item.total * 100 + '%');
@@ -300,7 +304,7 @@ const KitchenViewer = ({
     // postprocessing sao
     // https://threejs.org/examples/jsm/postprocessing/EffectComposer.js
     let composer = null;
-    if (useSAOPass) {
+    if (enableSAOPass) {
       composer = new EffectComposer( renderer );
       const renderPass = new RenderPass( scene, camera );
       composer.addPass( renderPass );
@@ -330,8 +334,8 @@ const KitchenViewer = ({
       camera: camera,
       containerEl: containerEl,
       renderer: renderer,
-      orbitControl: orbitControl,
-      raycaster: raycaster,
+      // orbitControl: orbitControl,
+      // raycaster: raycaster,
       clock: clock,
       composer: composer,
     })
@@ -421,9 +425,9 @@ const KitchenViewer = ({
       //   return prevAnimatePan - 1;
       // });
     }
-    threeObjects.orbitControl.update();
+    // threeObjects.orbitControl.update();
     // mac seems too lag for the sao pass rendering
-    if (useSAOPass && threeObjects.composer) {
+    if (enableSAOPass && threeObjects.composer) {
       threeObjects.composer.render();
     } else {
       threeObjects.renderer.render( threeObjects.scene, threeObjects.camera );
