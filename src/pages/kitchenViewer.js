@@ -36,7 +36,7 @@ const addShadowToChild = (object, scene) => {
       child.intensity = 0.85;
     } else if (child.isDirectionalLight) {
       child.castShadow = true;
-      child.receiveShadow = true;
+      // child.receiveShadow = true;
       child.shadow.mapSize.width = 512;
       child.shadow.mapSize.height = 512;
       child.shadow.camera.near = 0.5;    // default
@@ -46,8 +46,8 @@ const addShadowToChild = (object, scene) => {
       child.shadow.camera.bottom = -1000;
       child.shadow.camera.top = 1000;
       child.intensity = 0.3;
-      const lightHelper = new THREE.DirectionalLightHelper( child, 10 );
-      scene.add(lightHelper);
+      // const lightHelper = new THREE.DirectionalLightHelper( child, 10 );
+      // scene.add(lightHelper);
     } else if (child.isCamera) {
       camera = child;
     } else {
@@ -101,92 +101,94 @@ const pansLoader = (roomLoaded) => {
       }
     }
   ];  
-  const [progress, setProgress] = useState(0);
-  const [panLoaded, setPanLoaded] = useState([]);
-  const [panSteps, setPanSteps] = useState([]);
-  useEffect(() => {
-    pans.forEach((pan, idx) => {
-      const currentPan = pansNameMapping[idx];
-      const panObject = roomLoaded.children.find(child => child.name === currentPan['panName']);
-      loader.load(pan[0], (object) => {
-        const mixer = new THREE.AnimationMixer( panObject );
-        object.animations[ 0 ]["tracks"].forEach(track => {
-          track['name'] = currentPan['tracksRename'][track['name']];
-        })
-        const action = mixer.clipAction( object.animations[ 0 ] );
-        action.loop = THREE.LoopOnce;
-        action.clampWhenFinished = true;
-        // action.play();
-        mixer.addEventListener('finished', () => {
-          setPanSteps((prevPanSteps) => {
-            const newPanSteps = [...prevPanSteps];
-            newPanSteps[idx] += 1;
-            return newPanSteps;
-          })
-        })
-        setPanLoaded((prevPanLoaded) => {
-          const newPanLoaded = [...prevPanLoaded];
-          newPanLoaded[idx] = {
-            ...newPanLoaded[idx],
-            actionShake: action,
-            mixerShake: mixer
-          }
-          return newPanLoaded;
-        });
-      }, (item) => {
-        // console.log( item, loaded, total );
-        console.log(item.loaded / item.total * 100 + '%');
-        setProgress((prevProgress) => {
-          return prevProgress + item.loaded / item.total
-        })
-      }, (err) => {
-        console.log(err);
-      });
-      
-      loader.load(pan[1], (object) => {
-        const mixer = new THREE.AnimationMixer( panObject );
-        // console.log(object.animations);
-        object.animations[ 0 ]["tracks"][0]["name"] = "Meat_A.position";
-        object.animations[ 0 ]["tracks"][1]["name"] = "Meat_A.quaternion";
-        const action = mixer.clipAction( object.animations[ 0 ] );
-        action.loop = THREE.LoopOnce;
-        action.clampWhenFinished = true;
-        // action.play();
-        mixer.addEventListener('finished', () => {
-          setPanSteps((prevPanSteps) => {
-            const newPanSteps = [...prevPanSteps];
-            newPanSteps[idx] += 1;
-            return newPanSteps;
-          })
-        })
-        setPanLoaded((prevPanLoaded) => {
-          const newPanLoaded = [...prevPanLoaded];
-          newPanLoaded[idx] = {
-            ...newPanLoaded[idx],
-            actionFlip: action,
-            mixerFlip: mixer
-          }
-          return newPanLoaded;
-        });
-      }, (item) => {
-        // console.log( item, loaded, total );
-        console.log(item.loaded / item.total * 100 + '%');
-        setProgress((prevProgress) => {
-          return prevProgress + item.loaded / item.total
-        })
-      }, (err) => {
-        console.log(err);
-      });
-    })
-  }, []);
-  useEffect(() => {
-    console.log(progress / pans.length);
-  }, [progress]);
-  return panLoaded;
+  // const [progress, setProgress] = useState(0);
+  // const [panLoaded, setPanLoaded] = useState([]);
+  // const [panSteps, setPanSteps] = useState([]);
+  // useEffect(() => {
+  pans.forEach((pan, idx) => {
+    const currentPan = pansNameMapping[idx];
+    const panObject = roomLoaded.children.find(child => child.name === currentPan['panName']);
+    loader.load(pan[0], (object) => {
+      const mixer = new THREE.AnimationMixer( panObject );
+      object.animations[ 0 ]["tracks"].forEach(track => {
+        track['name'] = currentPan['tracksRename'][track['name']];
+      })
+      const action = mixer.clipAction( object.animations[ 0 ] );
+      action.loop = THREE.LoopOnce;
+      action.clampWhenFinished = true;
+      // action.play();
+      mixer.addEventListener('finished', () => {
+        // setPanSteps((prevPanSteps) => {
+        //   const newPanSteps = [...prevPanSteps];
+        //   newPanSteps[idx] += 1;
+        //   return newPanSteps;
+        // })
+      })
+      // setPanLoaded((prevPanLoaded) => {
+      //   const newPanLoaded = [...prevPanLoaded];
+      //   newPanLoaded[idx] = {
+      //     ...newPanLoaded[idx],
+      //     actionShake: action,
+      //     mixerShake: mixer
+      //   }
+      //   return newPanLoaded;
+      // });
+    }, (item) => {
+      // console.log( item, loaded, total );
+      console.log(item.loaded / item.total * 100 + '%');
+      // setProgress((prevProgress) => {
+      //   return prevProgress + item.loaded / item.total
+      // })
+    }, (err) => {
+      console.log(err);
+    });
+    
+    loader.load(pan[1], (object) => {
+      const mixer = new THREE.AnimationMixer( panObject );
+      // console.log(object.animations);
+      object.animations[ 0 ]["tracks"][0]["name"] = "Meat_A.position";
+      object.animations[ 0 ]["tracks"][1]["name"] = "Meat_A.quaternion";
+      const action = mixer.clipAction( object.animations[ 0 ] );
+      action.loop = THREE.LoopOnce;
+      action.clampWhenFinished = true;
+      // action.play();
+      mixer.addEventListener('finished', () => {
+        // setPanSteps((prevPanSteps) => {
+        //   const newPanSteps = [...prevPanSteps];
+        //   newPanSteps[idx] += 1;
+        //   return newPanSteps;
+        // })
+      })
+      // setPanLoaded((prevPanLoaded) => {
+      //   const newPanLoaded = [...prevPanLoaded];
+      //   newPanLoaded[idx] = {
+      //     ...newPanLoaded[idx],
+      //     actionFlip: action,
+      //     mixerFlip: mixer
+      //   }
+      //   return newPanLoaded;
+      // });
+    }, (item) => {
+      // console.log( item, loaded, total );
+      console.log(item.loaded / item.total * 100 + '%');
+      // setProgress((prevProgress) => {
+      //   return prevProgress + item.loaded / item.total
+      // })
+    }, (err) => {
+      console.log(err);
+    });
+  })
+  // }, []);
+  // useEffect(() => {
+    // console.log(progress / pans.length);
+  // }, [progress]);
+  return ['return1','return2'];
 }
 
 
-const KitchenViewer = () => {
+const KitchenViewer = ({
+  enableSAOPass = false
+}) => {
   const [threeObjects, setThreeObjects] = useState({
     scene: null,
     camera: null,
@@ -206,7 +208,6 @@ const KitchenViewer = () => {
   const [windowSize, setWindowSize] = useState([window.innerWidth, window.innerHeight]);
   const [fpsTimer, setFpsTimer] = useState(Date.now());
   // const [test1, test2] = pansLoader(object);
-  const enableSAOPass = false;
   let containerEl = null;
   let animationFrame = null;
   const setContainerEl = (ref) => containerEl = ref;
@@ -218,6 +219,7 @@ const KitchenViewer = () => {
     camera.position.set(0, 240, -150);
     // camera.rotation.set(90, 0, 0);
     camera.lookAt(0, 0, 120);
+    camera.useTarget = false;
     camera.updateProjectionMatrix();
     
     // const light = new THREE.DirectionalLight(0xFFFFFF, 1);
@@ -228,7 +230,7 @@ const KitchenViewer = () => {
     const light = new THREE.AmbientLight(0xFFFFFF, 0.1);
     scene.add(light);
 
-    const renderer = new THREE.WebGLRenderer( { antialias: true } );
+    const renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( containerEl.offsetWidth, containerEl.offsetHeight );
     renderer.setClearColor( 0xcccccc, 1 );
@@ -238,41 +240,9 @@ const KitchenViewer = () => {
 
     // add control
     const orbitControl = new OrbitControls( camera, renderer.domElement );
-    // dampling
-    // orbitControl.enableDamping = true;
-    // orbitControl.dampingFactor = 0.05;
-    // // to cancel out the super fast rotation after enabled damping
-    // // orbitControl.enableRotate = false;
-    // orbitControl.rotateSpeed = 0.02;
-    // orbitControl.autoRotateSpeed = 0.05;
-    
-    /**
-     * limit the vertical rotation
-     * https://stackoverflow.com/questions/25308943/limit-orbitcontrols-horizontal-rotation/25311658#25311658
-     **/ 
-    // How far you can orbit vertically, upper and lower limits.
-    // Range is 0 to Math.PI radians
-    // orbitControl.minPolarAngle = Math.PI / 8;
-    // orbitControl.maxPolarAngle = Math.PI * 3 / 8;
-    // // How far you can orbit horizontally, upper and lower limits.
-    // // If set, must be a sub-interval of the interval [ - Math.PI, Math.PI ].
-    // orbitControl.minAzimuthAngle = Math.PI / 4;
-    // orbitControl.maxAzimuthAngle = Math.PI / 4; 
-    
-    // // to disable zoom
-    // orbitControl.enableZoom = false;
-    // orbitControl.minDistance = 5;
-    // orbitControl.maxDistance = 5;
-    // to disable rotation
-    // orbitControl.enableRotate = false;
-    // to disable pan
-    // orbitControl.enablePan = false;
-    // orbitControl.panSpeed = 0.05;
-    // raycaster
-    // const raycaster = new THREE.Raycaster(camera.position, new THREE.Vector3(0, 0, 0), 0, orbitControl.maxDistance * 2);
+    orbitControl.center.z = 120;
 
     const clock = new THREE.Clock();
-    
 
     const loader = new FBXLoader();
     // let mixer = null;
@@ -283,7 +253,7 @@ const KitchenViewer = () => {
       // turn the cooker face material to white
       const pansArray = object.children.filter((obj) => obj.name.startsWith("frying_pan_"));
       pansArray.forEach(panObj => {
-        const cookerFace = panObj.children.find((panMesh) => panMesh.name.startsWith('induction_cooker_') && panMesh.name.endsWith('2'));
+        const cookerFace = panObj.children.find((panMesh) => panMesh.name.toLowerCase().startsWith('induction_cooker_') && panMesh.name.endsWith('2'));
         cookerFace.material.color = new THREE.Color(0xffffff);
       })
     }, (item) => {
@@ -326,6 +296,9 @@ const KitchenViewer = () => {
 
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    // THREE.BasicShadowMap = 0;
+    // THREE.PCFShadowMap = 1;
+    // THREE.PCFSoftShadowMap = 2;
     renderer.shadowMap.needsUpdate = true;
 
     // renderer.vr.enabled = true;
@@ -334,7 +307,7 @@ const KitchenViewer = () => {
       camera: camera,
       containerEl: containerEl,
       renderer: renderer,
-      // orbitControl: orbitControl,
+      orbitControl: orbitControl,
       // raycaster: raycaster,
       clock: clock,
       composer: composer,
@@ -342,78 +315,9 @@ const KitchenViewer = () => {
   }
 
   const loadPans = () => {
-    // const loader = new FBXLoader();
-    // // 3 pans
-
-    // const panA = roomLoaded.children.find(child => child.name === "frying_pan_A");
     
-    // loader.load(panShakeUrl, (object) => {
-    //   const mixer = new THREE.AnimationMixer( panA );
-    //   object.animations[ 0 ]["tracks"][0]["name"] = "Meat_A.position";
-    //   object.animations[ 0 ]["tracks"][1]["name"] = "Meat_A.quaternion";
-    //   const action = mixer.clipAction( object.animations[ 0 ] );
-    //   action.loop = THREE.LoopOnce;
-    //   action.clampWhenFinished = true;
-    //   // action.play();
-    //   mixer.addEventListener('finished', () => {
-    //     setPlayingSteps((prevPlayingSteps) => {
-    //       return prevPlayingSteps + 1;
-    //     })
-    //   })
-    //   setActions((prevActions) => {
-    //     return [
-    //       ...prevActions,
-    //       action
-    //     ]
-    //   })
-    //   setMixers((prevMixers) => {
-    //     return [
-    //       ...prevMixers,
-    //       mixer
-    //     ]
-    //   })
-    // }, (item) => {
-    //   // console.log( item, loaded, total );
-    //   console.log(item.loaded / item.total * 100 + '%');
-    // }, (err) => {
-    //   console.log(err);
-    // });
-    
-    
-    // loader.load(panFlipUrl, (object) => {
-    //   const mixer = new THREE.AnimationMixer( panA );
-    //   // console.log(object.animations);
-    //   object.animations[ 0 ]["tracks"][0]["name"] = "Meat_A.position";
-    //   object.animations[ 0 ]["tracks"][1]["name"] = "Meat_A.quaternion";
-    //   const action = mixer.clipAction( object.animations[ 0 ] );
-    //   action.loop = THREE.LoopOnce;
-    //   action.clampWhenFinished = true;
-    //   // action.play();
-    //   mixer.addEventListener('finished', () => {
-    //     setPlayingSteps((prevPlayingSteps) => {
-    //       return prevPlayingSteps + 1;
-    //     })
-    //   })
-    //   addShadowToChild(object, scene);
-    //   // scene.add(object);
-    //   setActions((prevActions) => {
-    //     return [
-    //       ...prevActions,
-    //       action
-    //     ]
-    //   })
-    //   setMixers((prevMixers) => {
-    //     return [
-    //       ...prevMixers,
-    //       mixer
-    //     ]
-    //   })
-    // }, (item) => {
-    //   // console.log( item, loaded, total );
-    //   console.log(item.loaded / item.total * 100 + '%');
-    // }, (err) => {
-    //   console.log(err);
-    // });
+    const [testing1, testing2] = pansLoader(roomLoaded);
+    console.log(testing1, testing2);
     
   }
   const update = () => {
@@ -425,7 +329,7 @@ const KitchenViewer = () => {
       //   return prevAnimatePan - 1;
       // });
     }
-    // threeObjects.orbitControl.update();
+    threeObjects.orbitControl.update();
     // mac seems too lag for the sao pass rendering
     if (enableSAOPass && threeObjects.composer) {
       threeObjects.composer.render();
@@ -490,9 +394,12 @@ const KitchenViewer = () => {
       window.removeEventListener('resize', onResize);
     }
   }, [threeObjects])
-  return <div ref={setContainerEl}
-    className="threeCanvas"
-  />;
+  return <>
+    <div ref={setContainerEl}
+      className="threeCanvas"
+    />
+    <div className="qrcodeLayer" />
+  </>;
 }
 
 export default KitchenViewer;

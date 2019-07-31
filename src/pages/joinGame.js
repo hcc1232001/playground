@@ -7,10 +7,18 @@ import {serverPath, serverPort} from 'globals/config';
 import UseDeviceMotion from 'components/useDeviceMotion';
 
 const App = (props) => {
+  const STATUS = Object.freeze({
+    CONNECTING: 0, 
+    IDLE: 1, 
+    SHAKING: 2, 
+    INVALID: 3, 
+    ENDGAME: 4
+  });
   const [socket, setSocket] = useState(null);
-  // const [playersInfo, setPlayersInfo] = useState([]);
+  const [playersInfo, setPlayersInfo] = useState([]);
   // const [shakeCount, setShakeCount] = useState(0);
-
+  const [statusDisplay, setStatusDisplay] = useState(STATUS.CONNECTING);
+  let lastShakeTime = null;
   useEffect(() => {
     // const serverPath = 'http://localhost';
     // get the ip and port from ipc
@@ -28,34 +36,52 @@ const App = (props) => {
       socket.on('connect', () => {
         console.log('connected !');
         socket.emit('joinRoom', props.match.match.params.userId);
-      });
-      socket.on('joinRoomStatus', (msg) => {
-        // display fail msg if cannot join any room
-        console.log('joinRoom status: ', msg);
-      });
-      // TODO: need to wait a start game signal !!
-      socket.on('gameStarted', (msg) => {
-        // display start shake msg
-        // and shake available now
+        // should be wait a join msg from server
+        setStatusDisplay(STATUS.IDLE);
       });
       socket.on('*', (msg) => {
         console.log(msg);
       })
     }
   }, [socket]);
-  const onShake = (event) => {
-    event.preventDefault();
+  const onShake = () => {
     /* send signal to server */
     socket.emit('shake');
-    // do some animation?
-    console.log('shake');
+    setStatusDisplay(STATUS.SHAKING);
+    if (lastShakeTime) {
+      clearTimeout(lastShakeTime);
+    }
+    lastShakeTime = setTimeout(() => {
+      setStatusDisplay(STATUS.IDLE);
+    },1000);
   }
   return <div>
-    <UseDeviceMotion onShake={onShake} />
-    Join Game!
-    {/* JSON.stringify(props) */}
-    <br />
-    <div onClick={onShake}>Shake it!</div>
+    {() => {
+      switch (statusDisplay) {
+        case STATUS.IDLE:
+          return <div className="status statusIdle">
+            <UseDeviceMotion onShake={onShake} />
+            Shake your phone to play
+          </div>;
+        case STATUS.CONNECTING:
+          return <div className="status statusConnecting">
+            Connecting
+          </div>;
+        case STATUS.SHAKING:
+          return <div className="status statusShaking">
+            <UseDeviceMotion onShake={onShake} />
+            Keep Shaking
+          </div>;
+        case STATUS.INVALID:
+          return <div className="status statusInvalid">
+            Game not found, please scan the QR code again
+          </div>;
+        case STATUS.ENDGAME:
+          return <div className="status statusGameend">
+            Finished, thanks for playing.
+          </div>;
+      }
+    }}
   </div>;
 }
 
