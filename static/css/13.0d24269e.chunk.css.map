@@ -1,1 +1,0 @@
-{"version":3,"sources":["kitchenViewer.css"],"names":[],"mappings":"AAAA,aACE,UAAW,CACX,WAAY,CACZ,eACF,CACA,oBACE,kBACF","file":"13.0d24269e.chunk.css","sourcesContent":[".threeCanvas {\r\n  width: 100%;\r\n  height: 100%;\r\n  overflow: hidden;\r\n}\r\n.threeCanvas canvas {\r\n  vertical-align: top;\r\n}"]}
