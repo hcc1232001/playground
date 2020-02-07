@@ -39,7 +39,7 @@ const ShakeGame = (props) => {
 
   return <div>
     Shaked {props.playerInfo.shakeCount} times.
-    <FBXViewer shakeCount={props.playerInfo.shakeCount} />
+    {/* <FBXViewer shakeCount={props.playerInfo.shakeCount} /> */}
   </div>;
 }
 

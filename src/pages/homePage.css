@@ -1,5 +1,13 @@
 .page.homePage {
+  height: 100%;
+}
+.qrcodeLayer {
   display: flex;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
 }
 .player-block {
@@ -9,12 +17,53 @@
   height: 100%;
   justify-content: center;
   align-items: center;
+  transform-style: preserve-3d;
+}
+.player-block .playerCard {
+  width: 80%;
+  height: 60%;
+  border-radius: 15px;
+  background-color: #ccc;
+  backface-visibility: hidden;
+  transition: all 0.5s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.player-block:nth-child(1) .playerCard {
+  background-color: #c00;
+}
+.player-block:nth-child(2) .playerCard {
+  background-color: #00c;
+}
+.player-block:nth-child(3) .playerCard {
+  background-color: #cc0;
+}
+.player-block .playerCard.joined {
+  position: absolute;
+  transform: rotateY(180deg);
+}
+.player-block .playerCard.joined {
+  position: absolute;
+  transform: rotateY(180deg);
+}
+.player-block .playerCard big {
+  font-size: 200%;
+}
+
+.player-block.joined .playerCard.waiting {
+  transform: rotateY(180deg);
+}
+.player-block.joined .playerCard.joined {
+  transform: rotateY(360deg);
 }
 .player-block a {
-  margin: 15px;
-  display: inline-block;
   vertical-align: top;
+  width: 80%;
 }
 .player-block a img {
   vertical-align: top;
+  /* width: 80%; */
+  width: 100%;
 }

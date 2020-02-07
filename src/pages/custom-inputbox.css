@@ -1,0 +1,47 @@
+.custom-inputbox {
+  position: relative;
+  padding-top: 25px;
+}
+
+.custom-inputbox label {
+  position: absolute;
+  transition: all 0.3s;
+  color: #ccc;
+  pointer-events: none;
+  left: 15px;
+  top: 36px;
+  font-size: 14px;
+}
+.custom-inputbox.filled label,
+.custom-inputbox.focus label {
+  top: 5px;
+  left: 0px;
+  font-size: 12px;
+  color: #aaa;
+}
+.custom-inputbox textarea {
+  resize: vertical;
+}
+.custom-uploadbox label {  
+  font-size: 12px;
+  color: #aaa;
+}
+.custom-uploadbox .imgPreviewRow i {
+  display: none;
+  order: 2;
+  margin: 0 15px;
+}
+.custom-uploadbox .imgPreviewRow .uploadedPreview + .newUploadPreview:not(:empty) + i {
+  display: block;
+}
+.custom-uploadbox .imgPreviewRow {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+}
+.custom-uploadbox .imgPreviewRow .newUploadPreview {
+  order: 3;
+}
+.custom-uploadbox .imgPreviewRow img {
+  width: 100px;
+}

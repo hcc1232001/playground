@@ -1,0 +1,73 @@
+body {
+  overscroll-behavior: none;
+}
+.touchTableFrame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #a9e6f5;
+  overflow: hidden;
+}
+.touchTableFrame .debugFrame.distance {
+  display: none;
+  width: 43.75%;
+  height: 1px;
+  background-color: red;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.touchTableFrame .debugFrame.distance:before,
+.touchTableFrame .debugFrame.distance:after {
+  content: '';
+  padding-top: 91%;
+  width: 91%;
+  border-top: 1px solid red;
+  position: absolute;
+  top: 50%;
+}
+.touchTableFrame .debugFrame.distance:before {
+  border-right: 1px solid red;
+  right: 100%;
+  transform-origin: top right;
+  transform: rotate(45DEG);
+}
+.touchTableFrame .debugFrame.distance:after {
+  border-left: 1px solid red;
+  left: 100%;
+  transform-origin: top left;
+  transform: rotate(-45DEG);
+}
+
+.touchTableFrame .debugFrame.rotation {
+  display: none;
+  width: 183.5756%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.touchTableFrame .debugFrame.rotation:before,
+.touchTableFrame .debugFrame.rotation:after {
+  content: '';
+  width: 100%;
+  border-top: 1px solid red;
+  position: absolute;
+  top: 50%;
+}
+.touchTableFrame .debugFrame.rotation:before {
+  transform: rotate(29.36DEG);
+}
+.touchTableFrame .debugFrame.rotation:after {
+  transform: rotate(-29.36DEG);
+}
+
+.touchTableInstancesWrapper {
+  width: 100%;
+  height: 100%;
+}

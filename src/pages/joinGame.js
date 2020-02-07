@@ -11,8 +11,8 @@ const App = (props) => {
     CONNECTING: 0, 
     IDLE: 1, 
     SHAKING: 2, 
-    INVALID: 3, 
-    ENDGAME: 4
+    ENDGAME: 3,
+    INVALID: 4, 
   });
   const [socket, setSocket] = useState(null);
   const [playersInfo, setPlayersInfo] = useState([]);
@@ -36,8 +36,15 @@ const App = (props) => {
       socket.on('connect', () => {
         console.log('connected !');
         socket.emit('joinRoom', props.match.match.params.userId);
-        // should be wait a join msg from server
-        setStatusDisplay(STATUS.IDLE);
+        // wait join result msg from server
+      })
+      socket.on('playerStatus', (joinStatus) => {
+        setStatusDisplay(STATUS[joinStatus.status]);
+        // if (joinStatus.roomJoined) {
+        //   setStatusDisplay(STATUS.IDLE);
+        // } else {
+        //   setStatusDisplay(STATUS.INVALID);
+        // }
       });
       socket.on('*', (msg) => {
         console.log(msg);
@@ -56,18 +63,18 @@ const App = (props) => {
     },1000);
   }
   return <div>
-    {() => {
+    {(() => {
       switch (statusDisplay) {
-        case STATUS.IDLE:
+        /* case STATUS.IDLE:
           return <div className="status statusIdle">
-            <UseDeviceMotion onShake={onShake} />
-            Shake your phone to play
+            Waiting for others players
           </div>;
         case STATUS.CONNECTING:
           return <div className="status statusConnecting">
             Connecting
-          </div>;
-        case STATUS.SHAKING:
+          </div>; */
+        case STATUS.IDLE:
+        /* case STATUS.SHAKING: */
           return <div className="status statusShaking">
             <UseDeviceMotion onShake={onShake} />
             Keep Shaking
@@ -81,7 +88,7 @@ const App = (props) => {
             Finished, thanks for playing.
           </div>;
       }
-    }}
+    })()}
   </div>;
 }
 

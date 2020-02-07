@@ -7,6 +7,7 @@ const UseDeviceMotion = (props) => {
   const [threshold, setThreshold] = useState(45);
   const [lastAccVec3, setLastAccVec3] = useState([null, null, null]);
   const [moveCounter, setMoveCounter] = useState(0);
+  const [permissionGranted, setPermissionGranted] = useState(false);
   // const [shakeCounter, setShakeCounter] = useState(0);
   
   const onMotion = useCallback(
@@ -50,13 +51,13 @@ const UseDeviceMotion = (props) => {
   }, [props.threshold])
 
   useEffect(() => {
-    window.addEventListener('deviceorientation', onMotion, false);
-    // console.log('addEventListener deviceorientation');
+    if (permissionGranted) {
+      window.addEventListener('deviceorientation', onMotion, false);
+    }
     return () => {
       window.removeEventListener('deviceorientation', onMotion, false);
-      // console.log('removeEventListener deviceorientation');
     }
-  }, [onMotion])
+  }, [permissionGranted, onMotion])
 
   useEffect(() => {
     if(moveCounter > 2) {
@@ -71,12 +72,33 @@ const UseDeviceMotion = (props) => {
 		}
   }, [moveCounter, props]);
 
+  const requestDeviceOrientationPermission = () => {
+    if (DeviceOrientationEvent.requestPermission) {
+      // alert('DeviceOrientationEvent.requestPermission');
+      DeviceOrientationEvent.requestPermission().then(response => {
+          if (response == 'granted') {
+            setPermissionGranted(true);
+            // window.addEventListener('deviceorientation', onMotion, false);
+            // window.addEventListener('deviceorientation', (e) => {
+            //   // do something with e
+            // })
+          }
+        })
+        .catch(console.error);
+    } else {
+      setPermissionGranted(true);
+      // alert('no DeviceOrientationEvent.requestPermission');
+      // window.addEventListener('deviceorientation', onMotion, false);
+    }
+  }
   // return <div>
   //   {lastAccVec3.map(v => v + ', ')}
   // </div>;
 
   // return shakeCounter;
-  return <div></div>;
+  return permissionGranted? 
+    <></>:
+    <div onClick={requestDeviceOrientationPermission}>Request Permission</div>;
 }
 
 export default UseDeviceMotion;

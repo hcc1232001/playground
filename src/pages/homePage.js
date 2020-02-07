@@ -11,6 +11,8 @@ import {serverPath, serverPort} from 'globals/config';
 import ShakeGame from 'containers/shakeGame';
 import CreateGame from 'pages/createGame';
 
+import KitchenViewer from 'pages/kitchenViewer';
+
 import './homePage.css';
 
 // const serverPath = 'https://socketio-testing.herokuapp.com';
@@ -19,12 +21,6 @@ import './homePage.css';
 const App = (props) => {
   const [socket, setSocket] = useState(null);
   const [playersInfo, setPlayersInfo] = useState([]);
-
-  const panFbxPath = [
-    'media/models/190717_frying pan animationA_shake.fbx',
-    'media/models/190717_frying pan animationA_shake.fbx',
-    'media/models/190717_frying pan animationA_shake.fbx',
-  ]
   useEffect(() => {
     // const serverPath = 'http://localhost';
     // get the ip and port from ipc
@@ -36,6 +32,9 @@ const App = (props) => {
 
     }
   }, []);
+  const startGame = () => {
+    socket.emit('startGame');
+  }
   useEffect(() => {
     if (socket) {
       socket.on('connect', () => {
@@ -47,7 +46,7 @@ const App = (props) => {
           const playerIdx = i;
           const playerInfo = playersInfo[playerIdx];
           // const joinGamePath = window.location.origin + '/#' + routes.joinGame.replace(':userId', playerInfo['playerId']);
-          const joinGamePath = window.location.origin + '/#' + generatePath(routes.joinGame, {userId: playerInfo['playerId']});
+          const joinGamePath = window.location.origin + window.location.pathname + '#' + generatePath(routes.joinGame, {userId: playerInfo['playerId']});
           QRCode.toDataURL(
             joinGamePath,
             {
@@ -76,27 +75,32 @@ const App = (props) => {
       socket.on('*', (msg) => {
         console.log(msg);
       })
+      socket.on('playerInfo', (playerInfo) => {
+        console.log(playerInfo);
+      })
     }
   }, [socket]);
 
   return <div className="page homePage">
     {/* display the box of the player recieved from server */}
-    {playersInfo.map(playerInfo => {
-      if (playerInfo.joined) {
-        return <div key={playerInfo['url']} className="player-block">
+    <div className="qrcodeLayer">
+      {playersInfo.map(playerInfo => {
+        return <div key={playerInfo['url']} className={`player-block ${playerInfo.joined? 'joined': 'waiting'}`}>
           {/* https://mathiasbynens.github.io/rel-noopener/ */}
-          <a href={playerInfo['url']} target="_blank" rel="noopener noreferrer">
-            <img src={playerInfo['img']} alt={`player QRcode`}/>
-          </a>
+          <div className="playerCard waiting">
+            <a href={playerInfo['url']} target="_blank" rel="noopener noreferrer">
+              <img src={playerInfo['img']} alt={`player QRcode`} className="playerQrcode" />
+            </a>
+          </div>
+          <div className="playerCard joined">
+            JOINED
+            <div className="shakeCount"><big>{playerInfo.shakeCount}</big></div>
+          </div>
         </div>;
-      } else {
-        return <div key={playerInfo['url']} className="player-block">
-          Player joined!
-          <ShakeGame playerInfo={playerInfo} />
-        </div>;
-      }
-    })}
-    {/* <CreateGame models={panFbxPath} /> */}
+      })}
+    </div>
+    {/* <KitchenViewer /> */}
+    {/* <div className="startGameButton" onClick={startGame}>Start Game!</div> */}
   </div>;
 }
 
