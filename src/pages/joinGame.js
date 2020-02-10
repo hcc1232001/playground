@@ -74,7 +74,7 @@ const App = (props) => {
             Connecting
           </div>; */
         case STATUS.IDLE:
-        /* case STATUS.SHAKING: */
+        case STATUS.SHAKING:
           return <div className="status statusShaking">
             <UseDeviceMotion onShake={onShake} />
             Keep Shaking
