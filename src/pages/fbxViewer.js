@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
 import * as THREE from 'three';
 import OrbitControls from 'utils/vendor/orbitControls';
-// import {FBXLoader} from 'utils/vendor/FBXLoader';
+import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';
 
 import './fbxViewer.css';
 // import fbxUrl from 'media/models/Windows for Building department breaking.fbx';
@@ -12,23 +12,49 @@ import './fbxViewer.css';
 
 // import fbxUrl from 'media/models/190715_CLP_game(7).fbx';
 
-const FBXLoader = require('three-fbxloader-offical');
+// const FBXLoader = require('three-fbxloader-offical');
 
 const addShadowToChild = (object, scene) => {
   // let camera = null;
-  // console.log(object.type);
+  // console.log(object.name);
   object.traverse( function ( child ) {
-    if (object !== child) {
-      addShadowToChild(child, scene);
+    // if (object !== child) {
+    //   child.children.forEach((c) =>
+    //     addShadowToChild(c, scene)
+    //   )
+    // }
+    if (child.isMesh) { // && child.scale.x === 0 && child.scale.y === 0 && child.scale.z === 0) {
+      // child.scale.x = 0.001;
+      // child.scale.y = 0.001;
+      // child.scale.z = 0.001;
+      child.material.side = THREE.FrontSide;
+      child.material.needsUpdate = true;
+      child.castShadow = true;
+      child.receiveShadow = true;
     }
-    if (child.isMesh && child.scale.x === 0 && child.scale.y === 0 && child.scale.z === 0) {
-      child.scale.x = 0.001;
-      child.scale.y = 0.001;
-      child.scale.z = 0.001;
-    }
-    child.castShadow = true;
-    child.receiveShadow = true;
   });
+  // return camera;
+}
+
+const addShadowToRobotArm = (object) => {
+  object.traverse( function ( child ) {
+    if (child.isMesh) {
+      child.castShadow = false;
+      child.receiveShadow = true;
+    }
+  })
+}
+
+const changeChildrenMaterialColor = (object, lvl = 0) => {
+  // let camera = null;
+  if (!["Robot_Hand_1", "Hand"].includes(object.name)) {
+    object.children.forEach( function ( child ) {
+      changeChildrenMaterialColor(child, lvl + 1);
+    });
+    if (object.isMesh) {
+      object.material.color = new THREE.Color(0.9098039216, 0.062745098, 0.678431373);
+    }
+  }
   // return camera;
 }
 const App = (props) => {
@@ -42,8 +68,9 @@ const App = (props) => {
     clock: null,
     mixer: null,
   });
-  const [cameraPosition, setCameraPosition] = useState([0, 0, 0]);
+  const [cameraPosition, setCameraPosition] = useState([0, 0, -10]);
   const { fbxName } = useParams();
+  console.log(fbxName);
   let containerEl = null;
   let animationFrame = null;
   const cameraDefaultPosition = [
@@ -56,51 +83,41 @@ const App = (props) => {
   const initScene = () => {
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x404040);
+    // scene.background = new THREE.Color("transparent");
     const camera = new THREE.PerspectiveCamera( 50, containerEl.offsetWidth / containerEl.offsetHeight, 0.1, 10000 );
-    camera.position.set(500, 500, 250);
+    // camera.position.set(500, 500, 250);
     camera.lookAt(0, 0, 0);
     camera.updateProjectionMatrix();
     
-    // const light = new THREE.DirectionalLight(0xFFFFFF, 1);
-    // light.position.set(50, 100, 100);
-    // scene.add(light);
-    const al = new THREE.AmbientLight(0x404040);
-    scene.add(al);
-    const pl1 = new THREE.DirectionalLight(0xFFFFFF, 0.12, 0.5, 2);
-    pl1.position.set(30.828, 9.431, 42.316);
-    scene.add(pl1);
-    const pl2 = new THREE.DirectionalLight(0xFFFFFF, 0.3, 0.5, 2);
-    pl2.position.set(30.611, 4.849, -24.751);
-    scene.add(pl2);
-    const pl3 = new THREE.DirectionalLight(0xFFFFFF, 0.28, 0.5, 2);
-    pl3.position.set(-30.237, 7.255, -48.423);
-    scene.add(pl3);
-    const pl4 = new THREE.DirectionalLight(0xFFFFFF, 0.22, 0.5, 2);
-    pl4.position.set(-13.893, 10.843, 39.919);
-    scene.add(pl4);
+    // const pl100 = new THREE.PointLight(new THREE.Color(1,1,1), 1, 0, 0);
+    // pl100.position.set(45.925, 16.159, -95.215);
+    // pl100.castShadow = true;
+    // scene.add(pl100);
 
-          
-    const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 0.7);
-    directionalLight.position.set(0, 100, 0);
-    directionalLight.castShadow = true;
-    directionalLight.shadow.camera.near = 0.5;    // default
-    directionalLight.shadow.camera.far = 50000;
-    directionalLight.shadow.camera.top = 2500;
-    directionalLight.shadow.camera.bottom = -2500;
-    directionalLight.shadow.camera.left = -2500;
-    directionalLight.shadow.camera.right = 2500;
-    directionalLight.shadow.mapSize.width = 1024;
-    directionalLight.shadow.mapSize.height = 1024;
-    scene.add(directionalLight);
+    // const pl50c = new THREE.PointLight(new THREE.Color(1,1,1), 0.5, 0, 0);
+    // pl50c.position.set(0, 171.974, -107.009);
+    // pl50c.castShadow = true;
+    // scene.add(pl50c);
 
-    const renderer = new THREE.WebGLRenderer( { antialias: true } );
+    // const pl50b = new THREE.PointLight(new THREE.Color(1,1,1), 0.5, 0, 0);
+    // pl50b.position.set(-139.051, 98.463, -73.829);
+    // pl50b.castShadow = true;
+    // scene.add(pl50b);
+
+    // const pl50a = new THREE.PointLight(new THREE.Color(1,1,1), 0.5, 0, 0);
+    // pl50a.position.set(49.707, 56.062, -29.082);
+    // pl50a.castShadow = true;
+    // scene.add(pl50a);
+
+    const renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( containerEl.offsetWidth, containerEl.offsetHeight );
-    renderer.setClearColor( 0xcccccc, 1 );
+    renderer.setClearColor( 0xcccccc, 0 );
     containerEl.appendChild( renderer.domElement );
 
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    // renderer.shadowMap.type = THREE.VSMShadowMap;
 
     // add control
     const orbitControl = new OrbitControls( camera, renderer.domElement );
@@ -169,6 +186,13 @@ const App = (props) => {
           cameraOfFbx.position.y,
           cameraOfFbx.position.z
         );
+      } else {
+        camera.position.set(
+          cameraPosition[0],
+          cameraPosition[1],
+          cameraPosition[2]
+        );
+        
       }
 
       for (let i = 'a'.charCodeAt(0); i <= 'z'.charCodeAt(0); i++) {
@@ -190,12 +214,168 @@ const App = (props) => {
             videoElement.material.map = texture;
         }
       }
+
+      // window.robotHand = object.getObjectByName(`Base_1_1`, true);
+
+      // hardcode the displacement map and the texture map
+      {
+        {
+          const videoElement = object.getObjectByName(`one`, true);
+          if (videoElement) {
+            const video = document.createElement('video');
+            video.oncanplay = () => {
+              video.play();
+            }
+            video.muted = true;
+            video.loop = true;
+            video.autoplay = true;
+            video.src = `./media/fbx/One.mp4`;
+            const texture = new THREE.VideoTexture( video );
+            texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+            texture.format = THREE.RGBFormat;
+            videoElement.material.displacementMap = texture;
+            videoElement.material.displacementScale = 10;
+          }
+        }
+        {
+          const videoElement = object.getObjectByName(`two`, true);
+          if (videoElement) {
+            const video = document.createElement('video');
+            video.oncanplay = () => {
+              video.play();
+            }
+            video.muted = true;
+            video.loop = true;
+            video.autoplay = true;
+            video.src = `./media/fbx/Two.mp4`;
+            const texture = new THREE.VideoTexture( video );
+              texture.minFilter = THREE.LinearFilter;
+              texture.magFilter = THREE.LinearFilter;
+              texture.format = THREE.RGBFormat;
+              videoElement.material.displacementMap = texture;
+              videoElement.material.displacementScale = 10;
+          }
+        }
+        {
+          const videoElement = object.getObjectByName(`three`, true);
+          if (videoElement) {
+            const video = document.createElement('video');
+            video.oncanplay = () => {
+              video.play();
+            }
+            video.muted = true;
+            video.loop = true;
+            video.autoplay = true;
+            video.src = `./media/fbx/Three.mp4`;
+            const texture = new THREE.VideoTexture( video );
+              texture.minFilter = THREE.LinearFilter;
+              texture.magFilter = THREE.LinearFilter;
+              texture.format = THREE.RGBFormat;
+              videoElement.material.displacementMap = texture;
+              videoElement.material.displacementScale = 10;
+              window.testEl = videoElement;
+              // videoElement.material.color = new THREE.Color(0.9098039216, 0.062745098, 0.678431373);
+          }
+        }
+        {
+          const videoElement = object.getObjectByName(`four`, true);
+          if (videoElement) {
+            const video = document.createElement('video');
+            video.oncanplay = () => {
+              video.play();
+            }
+            video.muted = true;
+            video.loop = true;
+            video.autoplay = true;
+            video.src = `./media/fbx/Four.mp4`;
+            const texture = new THREE.VideoTexture( video );
+              texture.minFilter = THREE.LinearFilter;
+              texture.magFilter = THREE.LinearFilter;
+              texture.format = THREE.RGBFormat;
+              videoElement.material.displacementMap = texture;
+              videoElement.material.displacementScale = 10;
+          }
+        }
+        {
+          const videoElement = object.getObjectByName(`Hand`, true);
+          if (videoElement) {
+            const video = document.createElement('video');
+            video.oncanplay = () => {
+              video.play();
+            }
+            video.muted = true;
+            video.loop = true;
+            video.autoplay = true;
+            video.src = `./media/fbx/Stone to gold.mp4`;
+            const texture = new THREE.VideoTexture( video );
+              texture.minFilter = THREE.LinearFilter;
+              texture.magFilter = THREE.LinearFilter;
+              texture.format = THREE.RGBFormat;
+              videoElement.material = new THREE.MeshBasicMaterial({
+                map: texture
+              });
+              // videoElement.material.map = texture;
+          }
+        }
+        // console.log(object);
+        changeChildrenMaterialColor(object);
+      }
+
+
       addShadowToChild(object, scene);
-      // object.scale.set(0.01, 0.01, 0.01);
+      
+      const robotArmEl = object.getObjectByName(`Robot_Hand_1`, true);
+      if (robotArmEl)
+        addShadowToRobotArm(robotArmEl);
+
+      const robotArmArmourEl = object.getObjectByName(`bbb`, true);
+      if (robotArmArmourEl) {
+        var robotArmArmourElTexture = new THREE.TextureLoader().load( './media/fbx/Color.jpg' );
+        robotArmArmourEl.material.emissiveMap = robotArmArmourElTexture;
+        robotArmArmourEl.material.emissive = new THREE.Color(1,1,1);
+        robotArmArmourEl.material.map = robotArmArmourElTexture;
+        robotArmArmourEl.material.color = new THREE.Color(1,1,1);
+      }
+
+      // atiq rock use
+      {
+        const rock = object.children[0];
+        var rockTexture = new THREE.TextureLoader().load( `./media/fbx/${fbxName}.jpg` );
+        rock.material = new THREE.MeshBasicMaterial();
+        // rock.material.map = rockTexture;
+        // rock.material.emissive = new THREE.Color(1,1,1);
+        rock.material.map = rockTexture;
+        rock.material.color = new THREE.Color(1,1,1);
+      }
+      switch (fbxName) {
+        case 'Fluorite':
+        case 'FluoriteD':
+        case 'FluoriteH':
+          object.position.set(0, 0, 18);
+          break;
+        case 'FossilizedFish':
+        case 'FossilizedFishD':
+        case 'FossilizedFishH':
+          object.position.set(0, 0, 9);
+          break;
+        case 'Okenite':
+        case 'OkeniteD':
+        case 'OkeniteH':
+          object.position.set(0, 0, 12);
+          break;
+        case 'PurpuriteH':
+        case 'PurpuriteM':
+        case 'PurpuriteL':
+          scene.background = new THREE.Color(0xafeeee);
+          break;
+        default:
+          object.position.set(0, 0, 0);
+      }
       scene.add(object);
 
 
-      camera.lookAt(object);
+      // camera.lookAt(object);
       setThreeObjects((prevThreeObjects) => {
         return {
           ...prevThreeObjects,
@@ -221,9 +401,11 @@ const App = (props) => {
     })
   }
   const update = () => {
-    animationFrame = setTimeout(() => update(), 1000 / 30);
+    animationFrame = requestAnimationFrame(() => update());
+    // animationFrame = setTimeout(() => update(), 1000 / 30);
     // fix the animation step to 30fps
-    const delta = 1 / 30; //threeObjects.clock.getDelta();
+    // const delta = 1 / 30; //threeObjects.clock.getDelta();
+    const delta = threeObjects.clock.getDelta();
     if (threeObjects.mixer) {
       threeObjects.mixer.update(delta);
     }
@@ -280,6 +462,8 @@ const App = (props) => {
       cameraPosition[1],
       cameraPosition[2]
     );
+    debugger
+    threeObjects.camera.lookAt(threeObjects.scene.children[0].children[0]);
   }
   return <div ref={setContainerEl}
     // onClick={doCameraAnimation}

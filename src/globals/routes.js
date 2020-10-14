@@ -3,6 +3,8 @@ const routes = {
   joinGame: '/game/:userId',
   fbxViewer: '/model',
   fbxViewerOfName: '/:fbxName',
+  jsonViewerOfName: '/:jsonName',
+  typhoonViewer: '/:fbxName',
   kitchenViewer: '/kitchenViewer',
   touchTable: '/touchTable',
   touchTableViewer: '/touchTableViewer',

@@ -5,7 +5,8 @@ import './index.css';
 import App from './App';
 // import * as serviceWorker from './serviceWorker';
 
-ReactDOM.hydrate(<App />, document.getElementById('main'));
+ReactDOM.render(<App />, document.getElementById('main'));
+// ReactDOM.hydrate(<App />, document.getElementById('main'));
 
 
 // console.log(ReactDOMServer.renderToString(<App />));

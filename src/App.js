@@ -8,6 +8,8 @@ import './App.css';
 import JoinGame from 'pages/joinGame';
 import HomePage from 'pages/homePage';
 import FbxViewer from 'pages/fbxViewer';
+import TyphoonViewer from 'pages/typhoonViewer';
+import JsonViewer from 'pages/jsonViewer';
 import KitchenViewer from 'pages/kitchenViewer';
 import IndexPage from 'pages/indexPage';
 import TouchTableViewer from 'pages/touchTableViewer';
@@ -19,6 +21,8 @@ const templates = {
   joinGame: JoinGame,
   homePage: HomePage,
   fbxViewer: FbxViewer,
+  typhoonViewer: TyphoonViewer,
+  jsonViewer: JsonViewer,
   kitchenViewer: KitchenViewer,
   indexPage: IndexPage,
   touchTableViewer: TouchTableViewer,
@@ -36,21 +40,25 @@ const getRenderPropForRoute = (pageId) => {
 
 const App = () => {
   return (
-    <HashRouter>
+    // <BrowserRouter basename="/rendering2">
+    <BrowserRouter>
       <Switch>
-        <Route path={routes.joinGame} render={getRenderPropForRoute('joinGame')} />
+        {/* <Route path={routes.joinGame} render={getRenderPropForRoute('joinGame')} /> */}
         {/* <Route path={routes.createGame} render={getRenderPropForRoute('createGame')} /> */}
-        <Route path={routes.homePage} render={getRenderPropForRoute('homePage')} />
+        {/* <Route path={routes.homePage} render={getRenderPropForRoute('homePage')} /> */}
         {/* <Route path={routes.fbxViewerOfName} render={getRenderPropForRoute('fbxViewer')} /> */}
+        {/* <Route path={routes.jsonViewerOfName} render={getRenderPropForRoute('jsonViewer')} /> */}
+        <Route path={routes.typhoonViewer} render={getRenderPropForRoute('typhoonViewer')} />
         {/* <Route path={routes.kitchenViewer} render={getRenderPropForRoute('kitchenViewer')} /> */}
         {/* <Route path={routes.indexPage} render={getRenderPropForRoute('indexPage')} /> */}
         {/* <Route path={routes.touchTableViewer} render={getRenderPropForRoute('touchTableViewer')} /> */}
         {/* <Route path={routes.touchTable} render={getRenderPropForRoute('touchTable')} /> */}
         {/* <Route path={routes.animatingLines} render={getRenderPropForRoute('animatingLines')} /> */}
         {/* <Route path={routes.svgAnimator} render={getRenderPropForRoute('svgAnimator')} /> */}
-        <Redirect to={routes.homePage} />
+        {/* <Redirect to={routes.homePage} /> */}
+        <Redirect to={'/webmb'} />
       </Switch>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
 

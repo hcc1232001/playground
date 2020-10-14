@@ -14,7 +14,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.0.1",
     "socket.io-client": "^2.3.0",
-    "three": "^0.106.2",
+    "three": "^0.121.1",
     "three-fbxloader-offical": "^1.0.0",
     "uglifyjs-webpack-plugin": "^2.2.0"
   },
